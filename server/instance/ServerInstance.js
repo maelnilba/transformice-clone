@@ -22,6 +22,7 @@ class ServerInstance {
     if (!this.LoggerInstances[socket.id]) {
       throw "nobody with this id";
     }
+    console.log("remove", this.LoggerInstances);
     delete this.LoggerInstances[socket.id];
   }
 }

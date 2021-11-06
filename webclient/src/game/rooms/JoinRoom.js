@@ -1,4 +1,4 @@
-class JoinRoom {
+export class JoinRoom {
   constructor() {
     this.roomId = 0;
   }
@@ -17,15 +17,10 @@ class JoinRoom {
     }
     instance._rooms[this.roomId].addPlayer(socket.id);
     socket.join(this.roomId);
-    socket.emit("event", {
-      id: 150,
-      players: instance._rooms[this.roomId].player,
-    });
+
     socket.to(this.roomId).emit("event", {
       id: 200,
       message: "Bonjour",
     });
   }
 }
-
-module.exports = JoinRoom;
