@@ -11,16 +11,27 @@ export class GameInstance {
     this.room = room;
   }
 
+  loadRoom(room) {
+    this.room = room;
+  }
+
   render() {
     if (this.room) {
       return (
-        <Sprite
-          image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/coin.png"
-          scale={{ x: 0.5, y: 0.5 }}
-          anchor={0.5}
-          x={150}
-          y={150}
-        />
+        <>
+          {Object.values(this.room.map?.players ?? {}).map((p, i) => {
+            return (
+              <Sprite
+                key={p.id}
+                image="./assets/Souris.png"
+                scale={{ x: 0.1, y: 0.1 }}
+                anchor={0.5}
+                x={p.x}
+                y={p.y}
+              />
+            );
+          })}
+        </>
       );
     }
 

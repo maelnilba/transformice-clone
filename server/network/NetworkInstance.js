@@ -1,4 +1,5 @@
 const JoinRoom = require("../game/auth/JoinRoom");
+const MoveMice = require("../game/map/MoveMice");
 
 class NetworkInstance {
   constructor() {
@@ -8,6 +9,7 @@ class NetworkInstance {
 
   initTypes() {
     this.MessagesTypes[80] = JoinRoom;
+    this.MessagesTypes[10] = MoveMice;
   }
 
   get _MessageTypes() {

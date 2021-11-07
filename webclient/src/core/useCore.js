@@ -13,9 +13,18 @@ const rendering = () => {
 export function useCore(props) {
   const socketRef = useRef();
   const [core, setCore] = useState(null);
-  useHotkeys("ArrowRight", () => {});
-  useHotkeys("ArrowLeft", () => {});
-  useHotkeys("ArrowUp", () => {});
+  useHotkeys("ArrowRight", () => {
+    core.GameController.moveMice("right");
+  });
+  useHotkeys("ArrowLeft", () => {
+    core.GameController.moveMice("left");
+  });
+  useHotkeys("ArrowUp", () => {
+    core.GameController.moveMice("up");
+  });
+  useHotkeys("ArrowDown", () => {
+    core.GameController.moveMice("down");
+  });
 
   useEffect(() => {
     socketRef.current = socketIOClient(ENDPOINT);

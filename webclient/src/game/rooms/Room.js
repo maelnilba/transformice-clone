@@ -1,19 +1,19 @@
-export class Room {
-  constructor() {
-    this.roomId = "";
-    this.time = "";
-    this.players = [];
-  }
+import { Map } from "../map/Map";
 
-  get ProtocolId() {
-    return 150;
+export class Room {
+  constructor(id) {
+    this.id = id;
+    this.players = {};
+    this.map = null;
   }
 
   deserialize(input) {
-    this.players = input;
+    this.id = input.roomId;
+    this.players = input.players;
+    this.map = new Map(input.roomId, input.map.players);
   }
 
   action(gi) {
-    gi.joinRoom(this);
+    gi.loadRoom(this);
   }
 }

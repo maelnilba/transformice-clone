@@ -16,7 +16,7 @@ class CoreGameServer {
     });
     this.ServerInstance = new ServerInstance();
     this.NetworkInstance = new NetworkInstance();
-    this.GameInstance = new GameInstance();
+    this.GameInstance = null;
   }
 
   init(port) {
@@ -24,17 +24,27 @@ class CoreGameServer {
       this.ServerInstance.addLogger(socket);
       socket.on("event", (data) => {
         const e = this.NetworkInstance.handle(data, data.id);
+        console.log(e);
         e.action(socket, this.GameInstance);
       });
 
       socket.on("disconnect", (reason) => {
         this.ServerInstance.removeLogger(socket);
+        let arr = Object.values(this.GameInstance._rooms).filter((r) =>
+          r.hasPlayer(socket.id)
+        );
+
+        arr.map((room, i) => {
+          this.GameInstance.rooms[room.id].removePlayer(socket.id);
+        });
       });
     });
 
     this.httpServer.listen(port, function () {
       console.log("listening on port ", port);
     });
+
+    this.GameInstance = new GameInstance(this.io);
   }
 }
 

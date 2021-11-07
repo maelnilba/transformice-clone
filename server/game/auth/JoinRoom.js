@@ -19,12 +19,14 @@ class JoinRoom {
     socket.join(this.roomId);
     socket.emit("event", {
       id: 150,
-      players: instance._rooms[this.roomId].player,
+      roomId: this.roomId,
+      players: instance._rooms[this.roomId].players,
     });
-    socket.to(this.roomId).emit("event", {
-      id: 200,
-      message: "Bonjour",
-    });
+    instance._rooms[this.roomId].emit();
+    // socket.to(this.roomId).emit("event", {
+    //   id: 200,
+    //   message: "Bonjour",
+    // });
   }
 }
 

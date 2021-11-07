@@ -8,8 +8,8 @@ export class NetworkInstance {
   }
 
   initTypes() {
-    this.MessagesTypes[80] = JoinRoom;
-    this.MessagesTypes[150] = Room;
+    this.MessagesTypes[150] = JoinRoom;
+    this.MessagesTypes[300] = Room;
   }
 
   get _MessageTypes() {

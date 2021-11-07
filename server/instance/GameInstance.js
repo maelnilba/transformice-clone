@@ -1,7 +1,8 @@
 const Room = require("../game/auth/rooms/Room");
 
 class GameInstance {
-  constructor() {
+  constructor(io) {
+    this.io = io;
     this.rooms = {};
   }
 
@@ -17,7 +18,7 @@ class GameInstance {
   }
 
   addRoom(id) {
-    this.rooms[id] = new Room(id);
+    this.rooms[id] = new Room(id, this.io);
   }
 
   removeRoom(id) {

@@ -7,7 +7,7 @@ export class CoreGameClient {
     this.NetworkInstance = new NetworkInstance();
     this.init();
     this.GameInstance = new GameInstance();
-    this.GameController = new GameController(socket);
+    this.GameController = new GameController(socket, this.GameInstance);
     this.render = rendering;
   }
 
@@ -26,7 +26,8 @@ export class CoreGameClient {
 }
 
 class GameController {
-  constructor(socket) {
+  constructor(socket, gi) {
+    this.gi = gi;
     this.socket = socket;
   }
 
@@ -34,6 +35,14 @@ class GameController {
     this.socket.emit("event", {
       id: 80,
       roomId: "salon1",
+    });
+  }
+
+  moveMice(action) {
+    this.socket.emit("event", {
+      id: 10,
+      roomId: this.gi.room.id,
+      action,
     });
   }
 }
