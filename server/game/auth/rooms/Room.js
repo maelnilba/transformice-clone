@@ -43,6 +43,9 @@ class Room {
   }
 
   newMap() {
+    if (this.map) {
+      this.map.stopRuntime();
+    }
     this.map = new Map(this.id, this.players, this);
     this.emit();
   }

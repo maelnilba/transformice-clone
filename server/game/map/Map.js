@@ -21,6 +21,10 @@ class Map {
     }, frameRate);
   }
 
+  stopRuntime() {
+    clearInterval(this.runtime);
+  }
+
   initEntities(mices) {
     let entities = {
       mices: [...Array(Object.values(mices).length)].map((v, i) => {
@@ -40,6 +44,7 @@ class Map {
       ],
     };
 
+    this.engine.gravity.y = 1;
     Matter.World.add(this.engine.world, [].concat(...Object.values(entities)));
 
     return entities;
@@ -59,20 +64,11 @@ class Map {
       });
       if (mbody) {
         if (action == "right") {
-          Matter.Body.setVelocity(
-            mbody,
-            Matter.Vector.create(5, mbody.velocity.y)
-          );
+          Matter.Body.translate(mbody, Matter.Vector.create(5, 0));
         } else if (action == "left") {
-          Matter.Body.setVelocity(
-            mbody,
-            Matter.Vector.create(-5, mbody.velocity.y)
-          );
+          Matter.Body.translate(mbody, Matter.Vector.create(-5, 0));
         } else if (action == "up") {
-          Matter.Body.setVelocity(
-            mbody,
-            Matter.Vector.create(mbody.velocity.x, -10)
-          );
+          Matter.Body.translate(mbody, Matter.Vector.create(0, -10));
         }
       }
     }
