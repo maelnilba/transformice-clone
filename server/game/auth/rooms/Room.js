@@ -5,8 +5,8 @@ class Room {
     this.io = io;
     this.id = id;
     this.players = {};
-    this.map = new Map(this.id, this.players);
-    this.rotation = setInterval(() => this.newMap(), 15000);
+    this.map = null;
+    this.rotation = setInterval(() => this.newMap(), 120000);
   }
 
   hasPlayer(id) {
@@ -23,7 +23,7 @@ class Room {
     if (!this.players[id]) {
       this.players[id] = id;
       if (Object.values(this.players).length === 1) {
-        newMap();
+        this.newMap();
       }
     }
   }
@@ -37,13 +37,13 @@ class Room {
     this.io.in(this.id).emit("event", {
       id: 300,
       roomId: this.id,
-      players: this.players,
-      map: { roomId: this.map.id, players: this.map.players },
+      players: this.playerslist,
+      map: { roomId: this.map.id, players: this.map.mices },
     });
   }
 
   newMap() {
-    this.map = new Map(this.id, this.players);
+    this.map = new Map(this.id, this.players, this);
     this.emit();
   }
 }

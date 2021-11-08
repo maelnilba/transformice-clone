@@ -16,7 +16,6 @@ class MoveMice {
   action(socket, instance) {
     if (instance._rooms[this.roomId]) {
       instance._rooms[this.roomId].map.movePlayer(socket.id, this.moveaction);
-      instance._rooms[this.roomId].emit();
     }
   }
 }
