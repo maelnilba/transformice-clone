@@ -37,8 +37,8 @@ class Room {
     this.io.in(this.id).emit("event", {
       id: 300,
       roomId: this.id,
-      players: this.playerslist,
-      map: { roomId: this.map.id, players: this.map.mices },
+      players: [...Object.values(this.players)],
+      map: this.map.emit,
     });
   }
 

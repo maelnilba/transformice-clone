@@ -19,6 +19,7 @@ class Map {
       });
       this.parent.emit();
     }, frameRate);
+
     Matter.Events.on(this.engine, "collisionStart", (p) => {
       p.pairs.forEach((pair) => {
         if (this.mices[pair.bodyA.label]) {
@@ -29,6 +30,26 @@ class Map {
         }
       });
     });
+  }
+
+  get emit() {
+    let grounds = this.entities.grounds.map((ground, idx) => {
+      const { min, max } = ground.bounds;
+      const width = max.x - min.x;
+      const height = max.y - min.y;
+      return {
+        pos: ground.position,
+        width,
+        height,
+        label: ground.label,
+      };
+    });
+
+    return {
+      roomId: this.roomId,
+      mices: [...Object.values(this.mices)],
+      grounds,
+    };
   }
 
   initMices(players) {
@@ -61,8 +82,15 @@ class Map {
           },
         });
       }),
-      walls: [
+      grounds: [
         Matter.Bodies.rectangle(400, 400, 800, 100, {
+          label: "Wood",
+          isStatic: true,
+          friction: 0.3,
+          frictionStatic: 0.3,
+        }),
+        Matter.Bodies.rectangle(600, 200, 20, 400, {
+          label: "Wood",
           isStatic: true,
           friction: 0.3,
           frictionStatic: 0.3,

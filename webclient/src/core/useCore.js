@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CoreGameClient } from "./CoreGameClient";
-import useHotkeys from "@reecelucas/react-use-hotkeys";
 import socketIOClient from "socket.io-client";
 import App from "../App";
 import ReactDOM from "react-dom";

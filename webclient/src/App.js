@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Stage, Sprite, Container } from "@inlet/react-pixi";
+import React from "react";
+import { Stage } from "@inlet/react-pixi";
 import { useCore } from "./core/useCore";
 
 function App() {
@@ -20,14 +20,17 @@ function App() {
       <button onClick={() => core.GameController.joinRoom()}>connect</button>
 
       {core && (
-        <Stage
-          width={800}
-          height={400}
-          raf
-          options={{ backgroundColor: 0x6a7495 }}
-        >
-          {core.GameInstance.render()}
-        </Stage>
+        <>
+          <Stage
+            width={800}
+            height={400}
+            raf
+            options={{ backgroundColor: 0x6a7495 }}
+          >
+            {core.GameInstance.renderMap()}
+          </Stage>
+          {core.GameInstance.renderList()}
+        </>
       )}
     </>
   );

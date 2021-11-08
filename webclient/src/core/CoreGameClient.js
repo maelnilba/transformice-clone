@@ -1,6 +1,5 @@
 import { GameInstance } from "../instance/GameInstance";
 import { NetworkInstance } from "../network/NetworkInstance";
-import { useKeyPress } from "../hooks/useKeyPress";
 
 export class CoreGameClient {
   constructor(socket, rendering) {

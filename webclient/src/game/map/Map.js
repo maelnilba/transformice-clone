@@ -1,6 +1,7 @@
 export class Map {
-  constructor(roomId, players) {
+  constructor(roomId, mices, grounds) {
     this.roomId = roomId;
-    this.players = players;
+    this.mices = mices;
+    this.grounds = grounds;
   }
 }

@@ -1,6 +1,3 @@
-import { Sprite } from "@inlet/react-pixi";
-import { Room } from "../game/rooms/Room";
-
 export class GameInstance {
   constructor() {
     this.chat = [];
@@ -19,23 +16,23 @@ export class GameInstance {
     this.room = room;
   }
 
-  render() {
+  renderMap() {
     if (this.room) {
+      return <>{this.room.awake()}</>;
+    }
+    return <></>;
+  }
+
+  renderList() {
+    if (this.room && this.room.players) {
+      console.log(this.room.players);
       return (
-        <>
-          {Object.values(this.room.map?.players ?? {}).map((p, i) => {
-            return (
-              <Sprite
-                key={p.id}
-                image="./assets/Souris.png"
-                scale={{ x: 0.1, y: 0.1 }}
-                anchor={0.5}
-                x={p.pos.x}
-                y={p.pos.y}
-              />
-            );
+        <ul>
+          {this.room.players.map((player, i) => {
+            // console.log(player);
+            return <li key={i}>{player}</li>;
           })}
-        </>
+        </ul>
       );
     }
 

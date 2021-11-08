@@ -15,6 +15,6 @@ export class JoinRoom {
   }
 
   action(gi) {
-    gi.joinRoom(this);
+    // gi.joinRoom(this);
   }
 }
