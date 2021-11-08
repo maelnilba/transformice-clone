@@ -9,19 +9,40 @@ class Map {
     this.startX = 200;
     this.startY = 200;
     this.playerlist = players;
-    this.mices = players;
+    this.mices = this.initMices(players);
     this.engine = Matter.Engine.create();
     this.entities = this.initEntities(this.mices);
     this.runtime = setInterval(() => {
       Matter.Engine.update(this.engine, frameRate);
-      Matter.Events.on(this.engine, "collisionEnd", (p) =>
-        console.log("new e", p.pairs)
-      );
-      this.mices = this.entities.mices.map((m, i) => {
-        return m.position;
+      this.entities.mices.map((m, i) => {
+        this.mices[m.label].pos = m.position;
       });
       this.parent.emit();
     }, frameRate);
+    Matter.Events.on(this.engine, "collisionStart", (p) => {
+      p.pairs.forEach((pair) => {
+        if (this.mices[pair.bodyA.label]) {
+          this.mices[pair.bodyA.label].isJumped = false;
+        }
+        if (this.mices[pair.bodyB.label]) {
+          this.mices[pair.bodyB.label].isJumped = false;
+        }
+      });
+    });
+  }
+
+  initMices(players) {
+    let mices = {};
+    Object.values(players).map((p, i) => {
+      mices[p] = {
+        pos: { x: 0, y: 0 },
+        isJumped: false,
+        isAlive: true,
+        hasCheese: false,
+        isShaman: false,
+      };
+    });
+    return mices;
   }
 
   stopRuntime() {
@@ -70,8 +91,12 @@ class Map {
           Matter.Body.translate(mbody, Matter.Vector.create(5, 0));
         } else if (action == "left") {
           Matter.Body.translate(mbody, Matter.Vector.create(-5, 0));
-        } else if (action == "up") {
-          Matter.Body.translate(mbody, Matter.Vector.create(0, -10));
+        } else if (action == "up" && !this.mices[playerId]["isJumped"]) {
+          this.mices[playerId]["isJumped"] = true;
+          Matter.Body.setVelocity(
+            mbody,
+            Matter.Vector.create(mbody.velocity.x, -10)
+          );
         }
       }
     }

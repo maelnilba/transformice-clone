@@ -30,8 +30,8 @@ export class GameInstance {
                 image="./assets/Souris.png"
                 scale={{ x: 0.1, y: 0.1 }}
                 anchor={0.5}
-                x={p.x}
-                y={p.y}
+                x={p.pos.x}
+                y={p.pos.y}
               />
             );
           })}
