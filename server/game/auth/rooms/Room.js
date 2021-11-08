@@ -22,6 +22,9 @@ class Room {
   addPlayer(id) {
     if (!this.players[id]) {
       this.players[id] = id;
+      if (Object.values(this.players).length === 1) {
+        newMap();
+      }
     }
   }
 
