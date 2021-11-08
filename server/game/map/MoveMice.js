@@ -13,7 +13,7 @@ class MoveMice {
     this.moveaction = input.action;
   }
 
-  action(socket, instance) {
+  action({ socket }, instance) {
     if (instance._rooms[this.roomId]) {
       instance._rooms[this.roomId].map.movePlayer(socket.id, this.moveaction);
     }

@@ -22,9 +22,17 @@ class CoreGameServer {
   init(port) {
     this.io.on("connection", (socket) => {
       this.ServerInstance.addLogger(socket);
+      socket.on("loggin", (data) => {
+        this.ServerInstance.getLoggerInstance(socket.id).setUsername(
+          data.username
+        );
+      });
       socket.on("event", (data) => {
         const e = this.NetworkInstance.handle(data, data.id);
-        e.action(socket, this.GameInstance);
+        e.action(
+          this.ServerInstance.getLoggerInstance(socket.id),
+          this.GameInstance
+        );
       });
 
       socket.on("disconnect", (reason) => {

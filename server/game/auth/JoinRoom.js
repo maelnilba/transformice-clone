@@ -11,7 +11,7 @@ class JoinRoom {
     this.roomId = input.roomId;
   }
 
-  action(socket, instance) {
+  action({ socket }, instance) {
     if (!instance.hasRoomId(this.roomId)) {
       instance.addRoom(this.roomId);
     }

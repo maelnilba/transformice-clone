@@ -30,10 +30,17 @@ class GameController {
     this.socket = socket;
   }
 
-  joinRoom() {
+  logIn(username) {
+    this.socket.emit("loggin", {
+      username,
+    });
+    this.joinRoom();
+  }
+
+  joinRoom(roomId = "salon1") {
     this.socket.emit("event", {
       id: 80,
-      roomId: "salon1",
+      roomId,
     });
   }
 

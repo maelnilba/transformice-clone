@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Stage } from "@inlet/react-pixi";
 import { useCore } from "./core/useCore";
 
 function App() {
   const [core] = useCore();
+  const [username, setUsername] = useState("");
 
   return (
     <>
@@ -17,7 +18,10 @@ function App() {
         />
       </Stage> */}
 
-      <button onClick={() => core.GameController.joinRoom()}>connect</button>
+      <input onChange={(e) => setUsername(e.target.value)} />
+      <button onClick={() => core.GameController.logIn(username)}>
+        connect
+      </button>
 
       {core && (
         <>
