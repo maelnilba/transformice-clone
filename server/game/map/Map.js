@@ -27,6 +27,9 @@ class Map {
         return Matter.Bodies.circle(this.startX, this.startY, 20, {
           label: Object.values(this.playerlist)[i],
           friction: 0.3,
+          collisionFilter: {
+            group: -1,
+          },
         });
       }),
       walls: [

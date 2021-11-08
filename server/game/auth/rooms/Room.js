@@ -6,7 +6,7 @@ class Room {
     this.id = id;
     this.players = {};
     this.map = null;
-    this.rotation = setInterval(() => this.newMap(), 120000);
+    this.rotation = setInterval(() => this.newMap(), 30000);
   }
 
   hasPlayer(id) {
