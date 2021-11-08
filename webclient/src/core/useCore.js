@@ -4,6 +4,7 @@ import useHotkeys from "@reecelucas/react-use-hotkeys";
 import socketIOClient from "socket.io-client";
 import App from "../App";
 import ReactDOM from "react-dom";
+import { useKeyPress } from "../hooks/useKeyPress";
 
 const ENDPOINT = "http://localhost:4001";
 const rendering = () => {
@@ -13,18 +14,35 @@ const rendering = () => {
 export function useCore(props) {
   const socketRef = useRef();
   const [core, setCore] = useState(null);
-  useHotkeys("ArrowRight", () => {
-    core.GameController.moveMice("right");
+
+  const ArrowRight = useKeyPress("ArrowRight");
+  const ArrowLeft = useKeyPress("ArrowLeft");
+  const ArrowUp = useKeyPress("ArrowUp");
+
+  useEffect(() => {
+    if (ArrowRight) {
+      core.GameController.moveMice("right");
+    }
+    if (ArrowLeft) {
+      core.GameController.moveMice("left");
+    }
+    if (ArrowUp) {
+      core.GameController.moveMice("up");
+    }
   });
-  useHotkeys("ArrowLeft", () => {
-    core.GameController.moveMice("left");
-  });
-  useHotkeys("ArrowUp", () => {
-    core.GameController.moveMice("up");
-  });
-  useHotkeys("ArrowDown", () => {
-    core.GameController.moveMice("down");
-  });
+
+  // useHotkeys("ArrowRight", () => {
+  //   core.GameController.moveMice("right");
+  // });
+  // useHotkeys("ArrowLeft", () => {
+  //   core.GameController.moveMice("left");
+  // });
+  // useHotkeys("ArrowUp", () => {
+  //   core.GameController.moveMice("up");
+  // });
+  // useHotkeys("ArrowDown", () => {
+  //   core.GameController.moveMice("down");
+  // });
 
   useEffect(() => {
     socketRef.current = socketIOClient(ENDPOINT);

@@ -55,7 +55,6 @@ class Map {
         }
       });
       if (mbody) {
-        console.log(mbody);
         if (action == "right") {
           Matter.Body.setVelocity(
             mbody,

@@ -24,7 +24,6 @@ class CoreGameServer {
       this.ServerInstance.addLogger(socket);
       socket.on("event", (data) => {
         const e = this.NetworkInstance.handle(data, data.id);
-        console.log(e);
         e.action(socket, this.GameInstance);
       });
 

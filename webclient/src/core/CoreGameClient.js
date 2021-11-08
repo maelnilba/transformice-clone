@@ -1,5 +1,6 @@
 import { GameInstance } from "../instance/GameInstance";
 import { NetworkInstance } from "../network/NetworkInstance";
+import { useKeyPress } from "../hooks/useKeyPress";
 
 export class CoreGameClient {
   constructor(socket, rendering) {
@@ -13,7 +14,6 @@ export class CoreGameClient {
 
   init() {
     this.socket.on("event", (data) => {
-      console.log(data);
       const e = this.NetworkInstance.handle(data, data.id);
       e.action(this.GameInstance);
       this.render();
@@ -39,10 +39,12 @@ class GameController {
   }
 
   moveMice(action) {
-    this.socket.emit("event", {
-      id: 10,
-      roomId: this.gi.room.id,
-      action,
-    });
+    if (this.gi.isInitiliaze) {
+      this.socket.emit("event", {
+        id: 10,
+        roomId: this.gi.room.id,
+        action,
+      });
+    }
   }
 }

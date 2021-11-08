@@ -7,6 +7,10 @@ export class GameInstance {
     this.room = null;
   }
 
+  get isInitiliaze() {
+    return this.room ? true : false;
+  }
+
   joinRoom(room) {
     this.room = room;
   }
