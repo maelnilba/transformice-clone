@@ -55,6 +55,7 @@ class Map {
         return Matter.Bodies.circle(this.startX, this.startY, 20, {
           label: Object.values(this.playerlist)[i],
           friction: 0.3,
+          inertia: Infinity,
           collisionFilter: {
             group: -1,
           },
@@ -64,6 +65,7 @@ class Map {
         Matter.Bodies.rectangle(400, 400, 800, 100, {
           isStatic: true,
           friction: 0.3,
+          frictionStatic: 0.3,
         }),
       ],
     };
