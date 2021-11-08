@@ -14,6 +14,9 @@ class Map {
     this.entities = this.initEntities(this.mices);
     this.runtime = setInterval(() => {
       Matter.Engine.update(this.engine, frameRate);
+      Matter.Events.on(this.engine, "collisionEnd", (p) =>
+        console.log("new e", p.pairs)
+      );
       this.mices = this.entities.mices.map((m, i) => {
         return m.position;
       });
