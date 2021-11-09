@@ -17,16 +17,25 @@ export function useCore(props) {
   const ArrowRight = useKeyPress("ArrowRight");
   const ArrowLeft = useKeyPress("ArrowLeft");
   const ArrowUp = useKeyPress("ArrowUp");
+  const [AFK, setAFK] = useState(true);
 
   useEffect(() => {
     if (ArrowRight) {
       core.GameController.moveMice("right");
+      setAFK(false);
     }
     if (ArrowLeft) {
       core.GameController.moveMice("left");
+      setAFK(false);
     }
     if (ArrowUp) {
       core.GameController.moveMice("up");
+      setAFK(false);
+    }
+
+    if (!ArrowUp && !ArrowRight && !ArrowLeft && !AFK) {
+      core.GameController.moveMice("stop");
+      setAFK(true);
     }
   });
 

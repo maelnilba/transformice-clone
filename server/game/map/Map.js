@@ -57,11 +57,21 @@ class Map {
       };
     });
 
+    let mices_object = this.entities.mices_object.map((obj, idxs) => {
+      return {
+        pos: obj.position,
+        label: obj.label,
+      };
+    });
+
     return {
       roomId: this.roomId,
       timeEnd: this.timeEnd,
-      mices: [...Object.values(this.mices)],
-      grounds,
+      entities: {
+        mices: [...Object.values(this.mices)],
+        grounds,
+        mices_object,
+      },
     };
   }
 
@@ -76,6 +86,7 @@ class Map {
         hasWin: false,
         isRunningLeft: false,
         isRunningRight: false,
+        direction: "right",
         isShaman: false,
       };
     });
@@ -128,9 +139,11 @@ class Map {
       if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
           Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
+          this.mices[playerId].isRunningLeft = false;
           this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
           Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
+          this.mices[playerId].isRunningRight = false;
           this.mices[playerId].isRunningLeft = true;
         } else if (action == "up" && !this.mices[playerId].isJumped) {
           this.mices[playerId].isJumped = true;
@@ -138,7 +151,13 @@ class Map {
             mbody,
             Matter.Vector.create(mbody.velocity.x, -10)
           );
-        } else {
+        } else if (action == "stop") {
+          if (this.mices[playerId].isRunningRight) {
+            this.mices[playerId].direction = "right";
+          }
+          if (this.mices[playerId].isRunningLeft) {
+            this.mices[playerId].direction = "left";
+          }
           this.mices[playerId].isRunningRight = false;
           this.mices[playerId].isRunningLeft = false;
         }
