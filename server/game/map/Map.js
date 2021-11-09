@@ -1,4 +1,5 @@
 const Matter = require("matter-js");
+const MapEnums = require("./types/enums/MapEnums");
 const frameRate = 1000 / 30;
 const canvas = { width: 800, height: 400 };
 
@@ -6,6 +7,7 @@ class Map {
   constructor(roomId, players, parent) {
     this.parent = parent;
     this.roomId = roomId;
+    this.timeEnd = new Date().setTime(new Date().getTime() + 2 * 60 * 1000);
     this.startX = 200;
     this.startY = 200;
     this.playerlist = players;
@@ -23,10 +25,20 @@ class Map {
     Matter.Events.on(this.engine, "collisionStart", (p) => {
       p.pairs.forEach((pair) => {
         if (this.mices[pair.bodyA.label]) {
-          this.mices[pair.bodyA.label].isJumped = false;
-        }
-        if (this.mices[pair.bodyB.label]) {
-          this.mices[pair.bodyB.label].isJumped = false;
+          if (pair.bodyB.label === "Wood") {
+            this.mices[pair.bodyA.label].isJumped = false;
+          }
+          if (pair.bodyB.label === "Cheese") {
+            this.mices[pair.bodyA.label].hasCheese = true;
+            pair.bodyA.frictionAir = 0.03;
+          }
+          if (
+            pair.bodyB.label === "Hole" &&
+            this.mices[pair.bodyA.label].hasCheese
+          ) {
+            this.mices[pair.bodyA.label].hasWin = true;
+            Matter.Sleeping.set(pair.bodyA, true);
+          }
         }
       });
     });
@@ -47,6 +59,7 @@ class Map {
 
     return {
       roomId: this.roomId,
+      timeEnd: this.timeEnd,
       mices: [...Object.values(this.mices)],
       grounds,
     };
@@ -60,6 +73,9 @@ class Map {
         isJumped: false,
         isAlive: true,
         hasCheese: false,
+        hasWin: false,
+        isRunningLeft: false,
+        isRunningRight: false,
         isShaman: false,
       };
     });
@@ -73,28 +89,21 @@ class Map {
   initEntities(mices) {
     let entities = {
       mices: [...Array(Object.values(mices).length)].map((v, i) => {
-        return Matter.Bodies.circle(this.startX, this.startY, 20, {
-          label: Object.values(this.playerlist)[i],
-          friction: 0.3,
-          inertia: Infinity,
-          collisionFilter: {
-            group: -1,
-          },
-        });
+        return new MapEnums(200, {
+          startX: this.startX,
+          startY: this.startY,
+          playerId: Object.values(this.playerlist)[i],
+        }).entity;
       }),
       grounds: [
-        Matter.Bodies.rectangle(400, 400, 800, 100, {
-          label: "Wood",
-          isStatic: true,
-          friction: 0.3,
-          frictionStatic: 0.3,
-        }),
-        Matter.Bodies.rectangle(600, 200, 20, 400, {
-          label: "Wood",
-          isStatic: true,
-          friction: 0.3,
-          frictionStatic: 0.3,
-        }),
+        new MapEnums(10, { isStatic: true, x: 400, y: 400, w: 800, h: 100 })
+          .entity,
+        new MapEnums(10, { isStatic: true, x: 600, y: 200, w: 20, h: 480 })
+          .entity,
+      ],
+      mices_object: [
+        new MapEnums(40, { x: 20, y: 300 }).entity,
+        new MapEnums(41, { x: 200, y: 320 }).entity,
       ],
     };
 
@@ -116,17 +125,22 @@ class Map {
           mbody = m;
         }
       });
-      if (mbody) {
+      if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
-          Matter.Body.translate(mbody, Matter.Vector.create(5, 0));
+          Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
+          this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
-          Matter.Body.translate(mbody, Matter.Vector.create(-5, 0));
-        } else if (action == "up" && !this.mices[playerId]["isJumped"]) {
-          this.mices[playerId]["isJumped"] = true;
+          Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
+          this.mices[playerId].isRunningLeft = true;
+        } else if (action == "up" && !this.mices[playerId].isJumped) {
+          this.mices[playerId].isJumped = true;
           Matter.Body.setVelocity(
             mbody,
             Matter.Vector.create(mbody.velocity.x, -10)
           );
+        } else {
+          this.mices[playerId].isRunningRight = false;
+          this.mices[playerId].isRunningLeft = false;
         }
       }
     }
