@@ -1,3 +1,4 @@
+import { ChatMessage } from "../game/chat/ChatMessage";
 import { JoinRoom } from "../game/rooms/JoinRoom";
 import { Room } from "../game/rooms/Room";
 
@@ -10,6 +11,7 @@ export class NetworkInstance {
   initTypes() {
     this.MessagesTypes[150] = JoinRoom;
     this.MessagesTypes[300] = Room;
+    this.MessagesTypes[333] = ChatMessage;
   }
 
   get _MessageTypes() {

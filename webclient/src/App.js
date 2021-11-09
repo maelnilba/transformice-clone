@@ -7,36 +7,42 @@ function App() {
   const [username, setUsername] = useState("");
 
   return (
-    <>
-      {/* <Stage width={800} height={400} options={{ backgroundColor: 0x6a7495 }}>
-        <Sprite
-          image="./assets/souris.png"
-          scale={0.125}
-          anchor={0.5}
-          x={0}
-          y={0}
-        />
-      </Stage> */}
-
-      <input onChange={(e) => setUsername(e.target.value)} />
-      <button onClick={() => core.GameController.logIn(username)}>
-        connect
-      </button>
-
-      {core && (
-        <>
-          <Stage
-            width={800}
-            height={400}
-            raf
-            options={{ backgroundColor: 0x6a7495 }}
-          >
-            {core.GameInstance.renderMap()}
-          </Stage>
-          {core.GameInstance.renderList()}
-        </>
-      )}
-    </>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100vh",
+        backgroundColor: "#6a7495",
+      }}
+    >
+      <div>
+        {core && !core.GameInstance.isLog && (
+          <div>
+            <input onChange={(e) => setUsername(e.target.value)} />
+            <button
+              onClick={() => core.GameInstance.GameController.logIn(username)}
+            >
+              connect
+            </button>
+          </div>
+        )}
+        {core && core.GameInstance.isLog && (
+          <>
+            <Stage
+              width={800}
+              height={400}
+              raf
+              options={{ backgroundColor: 0x6a7495 }}
+            >
+              {core.GameInstance.renderMap()}
+            </Stage>
+            {core.GameInstance.renderUI()}
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 

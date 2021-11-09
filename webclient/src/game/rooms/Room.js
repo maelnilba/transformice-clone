@@ -9,6 +9,10 @@ export class Room {
     this.map = null;
   }
 
+  get ProtocolId() {
+    return 300;
+  }
+
   deserialize(input) {
     this.id = input.roomId;
     this.players = input.players;

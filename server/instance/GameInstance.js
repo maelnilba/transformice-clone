@@ -10,6 +10,10 @@ class GameInstance {
     return this.rooms;
   }
 
+  get _io() {
+    return this.io;
+  }
+
   hasRoomId(id) {
     if (this.rooms[id]) {
       return true;

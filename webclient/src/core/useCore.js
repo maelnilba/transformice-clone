@@ -21,20 +21,20 @@ export function useCore(props) {
 
   useEffect(() => {
     if (ArrowRight) {
-      core.GameController.moveMice("right");
+      core.GameInstance.GameController.moveMice("right");
       setAFK(false);
     }
     if (ArrowLeft) {
-      core.GameController.moveMice("left");
+      core.GameInstance.GameController.moveMice("left");
       setAFK(false);
     }
     if (ArrowUp) {
-      core.GameController.moveMice("up");
+      core.GameInstance.GameController.moveMice("up");
       setAFK(false);
     }
 
     if (!ArrowUp && !ArrowRight && !ArrowLeft && !AFK) {
-      core.GameController.moveMice("stop");
+      core.GameInstance.GameController.moveMice("stop");
       setAFK(true);
     }
   });

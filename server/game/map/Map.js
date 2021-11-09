@@ -81,7 +81,7 @@ class Map {
     Object.values(players).map((p, i) => {
       mices[p.id] = {
         username: p.username,
-        pos: { x: 0, y: 0 },
+        pos: { x: this.startX, y: this.startY },
         isJumped: false,
         isAlive: true,
         hasCheese: false,
