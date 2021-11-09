@@ -125,7 +125,7 @@ class Mice {
       image = "micerun";
     }
 
-    if (this.hasWin) {
+    if (this.hasWin || !this.isAlive) {
       return <></>;
     }
     return (

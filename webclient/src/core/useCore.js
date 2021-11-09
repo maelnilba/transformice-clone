@@ -18,21 +18,32 @@ export function useCore(props) {
   const ArrowLeft = useKeyPress(["ArrowLeft", "Q", "q"]);
   const ArrowUp = useKeyPress(["ArrowUp", "Z", "z"]);
   const [AFK, setAFK] = useState(true);
+  const [lastArrow, setLastArrow] = useState("ArrowUp");
 
   useEffect(() => {
-    if (ArrowRight) {
-      core.GameInstance.GameController.moveMice("right");
-      setAFK(false);
-    }
-    if (ArrowLeft) {
-      core.GameInstance.GameController.moveMice("left");
-      setAFK(false);
+    if (ArrowLeft && ArrowRight) {
+      if (lastArrow == "ArrowRight") {
+        core.GameInstance.GameController.moveMice("left");
+      }
+      if (lastArrow == "ArrowLeft") {
+        core.GameInstance.GameController.moveMice("right");
+      }
+    } else {
+      if (ArrowRight) {
+        core.GameInstance.GameController.moveMice("right");
+        setAFK(false);
+        setLastArrow("ArrowRight");
+      }
+      if (ArrowLeft) {
+        core.GameInstance.GameController.moveMice("left");
+        setAFK(false);
+        setLastArrow("ArrowLeft");
+      }
     }
     if (ArrowUp) {
       core.GameInstance.GameController.moveMice("up");
       setAFK(false);
     }
-
     if (!ArrowUp && !ArrowRight && !ArrowLeft && !AFK) {
       core.GameInstance.GameController.moveMice("stop");
       setAFK(true);

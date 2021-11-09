@@ -19,6 +19,15 @@ class Map {
       this.entities.mices.map((m, i) => {
         this.mices[m.label].pos = m.position;
         this.mices[m.label].tick = this.mices[m.label].tick + 1;
+        if (
+          m.position.y > 500 ||
+          m.position.x > 900 ||
+          m.position.x < -100 ||
+          m.position.y < -500
+        ) {
+          this.mices[m.label].isAlive = false;
+          Matter.Sleeping.set(m, true);
+        }
       });
       this.parent.emit();
     }, frameRate);
