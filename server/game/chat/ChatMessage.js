@@ -1,3 +1,5 @@
+const CommandMessage = require("./CommandMessage");
+
 class ChatMessage {
   constructor() {
     this.roomId = "";
@@ -16,7 +18,10 @@ class ChatMessage {
   }
 
   action({ socket, username }, instance) {
-    if (instance._io) {
+    if (this.message.startsWith("/", 0)) {
+      let commande = new CommandMessage(this.message).handle();
+      commande.action({ socket, username, roomId: this.roomId }, instance);
+    } else if (instance._io) {
       instance._io.in(this.roomId).emit("event", {
         id: 333,
         senderId: this.senderId,

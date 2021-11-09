@@ -26,7 +26,8 @@ class GameInstance {
   }
 
   removeRoom(id) {
-    delete this.room[id];
+    this.rooms[id].stopRotation();
+    delete this.rooms[id];
   }
 }
 
