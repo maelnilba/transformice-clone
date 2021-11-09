@@ -1,5 +1,6 @@
 import { Map } from "../map/Map";
 import { Sprite, Container, Text } from "@inlet/react-pixi";
+import { TextStyle } from "@pixi/text";
 
 export class Room {
   constructor(id) {
@@ -31,7 +32,7 @@ export class Room {
         {this.map.grounds.map((ground, i) => {
           return (
             <Sprite
-              key={i}
+              key={i + ground.pos.x}
               image={`./assets/grounds/${ground.label}.png`}
               scale={1}
               anchor={0.5}
@@ -42,13 +43,10 @@ export class Room {
             />
           );
         })}
-        {this.map.mices.map((mice, i) => {
-          return new Mice(i, mice).render();
-        })}
         {this.map.mices_object.map((obj, i) => {
           return (
             <Sprite
-              key={i}
+              key={i + obj.pos.y}
               image={`./assets/decors/${obj.label}.png`}
               scale={0.25}
               anchor={0.5}
@@ -56,6 +54,9 @@ export class Room {
               y={obj.pos.y}
             />
           );
+        })}
+        {this.map.mices.map((mice, i) => {
+          return new Mice(i, mice).render();
         })}
       </>
     );
@@ -75,8 +76,11 @@ class Mice {
       hasWin,
       hasCheese,
       isShaman,
+      tick,
+      username,
     }
   ) {
+    this.username = username;
     this.index = i;
     this.x = pos.x;
     this.y = pos.y;
@@ -88,40 +92,76 @@ class Mice {
     this.hasWin = hasWin;
     this.hasCheese = hasCheese;
     this.isShaman = isShaman;
+    this.tick = tick;
   }
 
   render() {
     let scale = { x: 0.3, y: 0.3 };
+    let frame = 1;
+    let anchor = { x: 0.5, y: 0.5 };
 
-    let image = "mice1";
+    let image = "mice";
     if (this.isRunningLeft || this.isRunningRight) {
-      image = "micerun1";
+      image = "micerun";
+      anchor = { x: 0.5, y: 0.6 };
+      frame = (Math.floor(this.tick / 5) % 4) + 1;
       if (this.isRunningRight) {
         scale = { x: 0.3, y: 0.3 };
       } else if (this.isRunningLeft) {
         scale = { x: -0.3, y: 0.3 };
       }
     } else {
+      frame = (Math.floor(this.tick / 5) % 6) + 1;
       scale =
         this.direction === "right" ? { x: 0.3, y: 0.3 } : { x: -0.3, y: 0.3 };
     }
 
     if (this.isJumped) {
-      image = "micerun1";
+      frame = 1;
+      image = "micerun";
     }
 
     if (this.hasWin) {
       return <></>;
     }
     return (
-      <Sprite
-        key={this.index}
-        image={`./assets/mice/${image}.png`}
-        scale={scale}
-        anchor={0.5}
-        x={this.x}
-        y={this.y}
-      />
+      <>
+        <Text
+          text={this.username}
+          x={this.x + 2.5}
+          y={this.y - 25}
+          anchor={{ x: 0.5, y: 0.5 }}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
+              fontSize: 12,
+              fontWeight: 400,
+              fill: "#ffffff",
+              stroke: "#000000",
+              strokeThickness: 2.5,
+              letterSpacing: 2,
+              dropShadow: true,
+              dropShadowColor: "#333333",
+              dropShadowBlur: 3,
+              dropShadowAngle: Math.PI / 6,
+              dropShadowDistance: 6,
+              wordWrap: true,
+              wordWrapWidth: 200,
+            })
+          }
+        />
+        <Sprite
+          key={this.index + this.x + this.y}
+          image={`./assets/mice/${image}${
+            this.hasCheese ? "cheese" : ""
+          }${frame}.png`}
+          scale={scale}
+          anchor={anchor}
+          x={this.x}
+          y={this.y}
+        />
+      </>
     );
   }
 }

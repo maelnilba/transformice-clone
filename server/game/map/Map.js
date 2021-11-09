@@ -18,6 +18,7 @@ class Map {
       Matter.Engine.update(this.engine, frameRate);
       this.entities.mices.map((m, i) => {
         this.mices[m.label].pos = m.position;
+        this.mices[m.label].tick = this.mices[m.label].tick + 1;
       });
       this.parent.emit();
     }, frameRate);
@@ -78,7 +79,8 @@ class Map {
   initMices(players) {
     let mices = {};
     Object.values(players).map((p, i) => {
-      mices[p] = {
+      mices[p.id] = {
+        username: p.username,
         pos: { x: 0, y: 0 },
         isJumped: false,
         isAlive: true,
@@ -88,6 +90,7 @@ class Map {
         isRunningRight: false,
         direction: "right",
         isShaman: false,
+        tick: 0,
       };
     });
     return mices;
@@ -103,7 +106,7 @@ class Map {
         return new MapEnums(200, {
           startX: this.startX,
           startY: this.startY,
-          playerId: Object.values(this.playerlist)[i],
+          playerId: Object.values(this.playerlist)[i].id,
         }).entity;
       }),
       grounds: [
@@ -139,13 +142,20 @@ class Map {
       if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
           Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
+          if (!this.mices[playerId].isRunningRight) {
+            this.mices[playerId].tick = 0;
+          }
           this.mices[playerId].isRunningLeft = false;
           this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
           Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
+          if (!this.mices[playerId].isRunningLeft) {
+            this.mices[playerId].tick = 0;
+          }
           this.mices[playerId].isRunningRight = false;
           this.mices[playerId].isRunningLeft = true;
         } else if (action == "up" && !this.mices[playerId].isJumped) {
+          this.mices[playerId].tick = 0;
           this.mices[playerId].isJumped = true;
           Matter.Body.setVelocity(
             mbody,
@@ -158,6 +168,7 @@ class Map {
           if (this.mices[playerId].isRunningLeft) {
             this.mices[playerId].direction = "left";
           }
+          this.mices[playerId].tick = 0;
           this.mices[playerId].isRunningRight = false;
           this.mices[playerId].isRunningLeft = false;
         }

@@ -11,7 +11,7 @@ class Cheese {
   }
 
   get entity() {
-    return Matter.Bodies.rectangle(this.x, this.y, 40, 30, {
+    return Matter.Bodies.rectangle(this.x, this.y, 40, 20, {
       label: "Cheese",
       isStatic: true,
       isSensor: true,

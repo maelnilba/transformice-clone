@@ -19,9 +19,9 @@ class Room {
     return true;
   }
 
-  addPlayer(id) {
+  addPlayer(id, username) {
     if (!this.players[id]) {
-      this.players[id] = id;
+      this.players[id] = { id, username };
       if (Object.values(this.players).length === 1) {
         this.newMap();
       }

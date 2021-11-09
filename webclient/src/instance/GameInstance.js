@@ -25,12 +25,10 @@ export class GameInstance {
 
   renderList() {
     if (this.room && this.room.players) {
-      console.log(this.room.players);
       return (
         <ul>
           {this.room.players.map((player, i) => {
-            // console.log(player);
-            return <li key={i}>{player}</li>;
+            return <li key={i + player.username}>{player.username}</li>;
           })}
         </ul>
       );

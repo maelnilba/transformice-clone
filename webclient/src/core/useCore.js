@@ -14,9 +14,9 @@ export function useCore(props) {
   const socketRef = useRef();
   const [core, setCore] = useState(null);
 
-  const ArrowRight = useKeyPress("ArrowRight");
-  const ArrowLeft = useKeyPress("ArrowLeft");
-  const ArrowUp = useKeyPress("ArrowUp");
+  const ArrowRight = useKeyPress(["ArrowRight", "D", "d"]);
+  const ArrowLeft = useKeyPress(["ArrowLeft", "Q", "q"]);
+  const ArrowUp = useKeyPress(["ArrowUp", "Z", "z"]);
   const [AFK, setAFK] = useState(true);
 
   useEffect(() => {

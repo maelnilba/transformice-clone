@@ -11,11 +11,11 @@ class JoinRoom {
     this.roomId = input.roomId;
   }
 
-  action({ socket }, instance) {
+  action({ socket, username }, instance) {
     if (!instance.hasRoomId(this.roomId)) {
       instance.addRoom(this.roomId);
     }
-    instance._rooms[this.roomId].addPlayer(socket.id);
+    instance._rooms[this.roomId].addPlayer(socket.id, username);
     socket.join(this.roomId);
     socket.emit("event", {
       id: 150,

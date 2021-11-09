@@ -5,13 +5,13 @@ export function useKeyPress(targetKey) {
   const [keyPressed, setKeyPressed] = useState(false);
   // If pressed key is our target key then set to true
   function downHandler({ key }) {
-    if (key === targetKey) {
+    if (targetKey.includes(key)) {
       setKeyPressed(true);
     }
   }
   // If released key is our target key then set to false
   const upHandler = ({ key }) => {
-    if (key === targetKey) {
+    if (targetKey.includes(key)) {
       setKeyPressed(false);
     }
   };
