@@ -20,7 +20,7 @@ class Lava {
       isStatic: this.isStatic,
       angle: this.angle,
     });
-    body.restitution = 10;
+    body.restitution = 3;
     body.friction = 0;
     return body;
   }

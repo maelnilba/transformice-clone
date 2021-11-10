@@ -17,7 +17,6 @@ class Map {
     this.timeEnd = new Date().setTime(new Date().getTime() + 2 * 60 * 1000);
     this.playerlist = players;
     this.mapConstructor = new Constructor(mapjson);
-
     this.records = {};
     this.mices = this.initMices(players);
     this.engine = Matter.Engine.create();
@@ -27,27 +26,29 @@ class Map {
       this.playerlist
     );
     this.runtime = setInterval(() => {
-      Matter.Engine.update(this.engine, frameRate);
-      let MapIsOver = true;
-      this.entities.mices.map((m, i) => {
-        this.mices[m.label].pos = m.position;
-        this.mices[m.label].tick = this.mices[m.label].tick + 1;
-        if (
-          m.position.y > 500 ||
-          m.position.x > 900 ||
-          m.position.x < -100 ||
-          m.position.y < -500
-        ) {
-          this.mices[m.label].isAlive = false;
-          Matter.Sleeping.set(m, true);
+      if (this.mapConstructor.init) {
+        Matter.Engine.update(this.engine, frameRate);
+        let MapIsOver = true;
+        this.entities.mices.map((m, i) => {
+          this.mices[m.label].pos = m.position;
+          this.mices[m.label].tick = this.mices[m.label].tick + 1;
+          if (
+            m.position.y > 500 ||
+            m.position.x > 900 ||
+            m.position.x < -100 ||
+            m.position.y < -500
+          ) {
+            this.mices[m.label].isAlive = false;
+            Matter.Sleeping.set(m, true);
+          }
+          if (!this.mices[m.label].hasWin && this.mices[m.label].isAlive) {
+            MapIsOver = false;
+          }
+        });
+        this.parent.emit();
+        if (MapIsOver) {
+          this.parent.mapOver();
         }
-        if (!this.mices[m.label].hasWin && this.mices[m.label].isAlive) {
-          MapIsOver = false;
-        }
-      });
-      this.parent.emit();
-      if (MapIsOver) {
-        this.parent.mapOver();
       }
     }, frameRate);
 
@@ -55,9 +56,9 @@ class Map {
       p.pairs.forEach((pair) => {
         if (this.mices[pair.bodyB.label]) {
           if (Groundlabel.includes(pair.bodyA.label)) {
-            if (pair.bodyA.friction > 0.1) {
-              this.mices[pair.bodyB.label].isJumped = false;
-            }
+            //if (pair.bodyA.friction > 0.1) {
+            this.mices[pair.bodyB.label].isJumped = false;
+            //}
           }
           if (pair.bodyA.label === "Cheese") {
             this.mices[pair.bodyB.label].hasCheese = true;
@@ -128,7 +129,7 @@ class Map {
     Object.values(players).map((p, i) => {
       mices[p.id] = {
         username: p.username,
-        pos: { x: this.startX, y: this.startY },
+        pos: this.mapConstructor.startPos,
         isJumped: false,
         isAlive: true,
         hasCheese: false,
@@ -162,24 +163,23 @@ class Map {
       });
       if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
-          Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
           // Matter.Body.setVelocity(
           //   mbody,
-          //   Matter.Vector.create(3, mbody.velocity.y)
+          //   Matter.Vector.create(0, mbody.velocity.y)
           // );
-          // Matter.Body.applyForce(mbody, mbody.position, { x: 0.001, y: 0 });
+          Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
+
           if (!this.mices[playerId].isRunningRight) {
             this.mices[playerId].tick = 0;
           }
           this.mices[playerId].isRunningLeft = false;
           this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
-          Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
           // Matter.Body.setVelocity(
           //   mbody,
-          //   Matter.Vector.create(-3, mbody.velocity.y)
+          //   Matter.Vector.create(0, mbody.velocity.y)
           // );
-          // Matter.Body.applyForce(mbody, mbody.position, { x: -0.001, y: 0 });
+          Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
 
           if (!this.mices[playerId].isRunningLeft) {
             this.mices[playerId].tick = 0;
@@ -194,6 +194,7 @@ class Map {
             mbody,
             Matter.Vector.create(mbody.velocity.x, -10)
           );
+          // Matter.Body.applyForce(mbody, mbody.position, { x: 0, y: -0.1 });
         } else if (action == "stop") {
           if (this.mices[playerId].isRunningRight) {
             this.mices[playerId].direction = "right";

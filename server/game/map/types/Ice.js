@@ -20,7 +20,7 @@ class Ice {
       isStatic: this.isStatic,
       angle: this.angle,
     });
-    body.restitution = 0;
+    body.restitution = 0.1;
     body.friction = 0;
 
     return body;

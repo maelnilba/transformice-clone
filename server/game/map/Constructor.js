@@ -6,6 +6,11 @@ class Constructor {
     this.world = json.world;
     this.code = json.code;
     this.author = json.author;
+    this.init = false;
+  }
+
+  get startPos() {
+    return this.world.parameters.mice_start;
   }
 
   initMap(mices, engine, playerlist) {
@@ -35,7 +40,7 @@ class Constructor {
       mices: [...Array(Object.values(mices).length)].map((v, i) => {
         return new MapEnums(200, {
           startX: this.world.parameters.mice_start.x,
-          startY: this.world.parameters.mice_start.x,
+          startY: this.world.parameters.mice_start.y,
           playerId: Object.values(playerlist)[i].id,
         }).entity;
       }),
@@ -44,6 +49,7 @@ class Constructor {
     engine.gravity.y = this.world.parameters.gravity;
     Matter.World.add(engine.world, [].concat(...Object.values(entities)));
 
+    this.init = true;
     return entities;
   }
 }

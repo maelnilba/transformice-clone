@@ -3,10 +3,10 @@
   "author": "nibounet",
   "world": {
     "parameters": {
-      "mice_start": { "x": 200, "y": 200 },
+      "mice_start": { "x": 400, "y": 200 },
       "shaman_start": { "x": 200, "y": 200 },
-      "cheeses": [{ "x": 400, "y": 100 }],
-      "holes": [
+      "holes": [{ "x": 400, "y": 100 }],
+      "cheeses": [
         { "x": 100, "y": 340 },
         { "x": 700, "y": 340 }
       ],

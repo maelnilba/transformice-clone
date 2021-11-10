@@ -14,7 +14,6 @@ class Mice {
   get entity() {
     return Matter.Bodies.circle(this.startX, this.startY, 20, {
       label: this.playerId,
-      frictionAir: 0.005,
       friction: 0.3,
       restitution: 0.2,
       inertia: Infinity,
