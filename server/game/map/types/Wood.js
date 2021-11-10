@@ -15,14 +15,14 @@ class Wood {
   }
 
   get entity() {
-    return Matter.Bodies.rectangle(this.x, this.y, this.w, this.h, {
+    let body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h, {
       label: "Wood",
       isStatic: this.isStatic,
-      friction: 0.3,
-      frictionStatic: 0.3,
-      restitution: 0.2,
       angle: this.angle,
     });
+    body.restitution = 0.2;
+    body.friction = 0.3;
+    return body;
   }
 }
 

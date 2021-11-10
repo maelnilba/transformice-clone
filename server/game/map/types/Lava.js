@@ -15,14 +15,14 @@ class Lava {
   }
 
   get entity() {
-    return Matter.Bodies.rectangle(this.x, this.y, this.w, this.h, {
+    let body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h, {
       label: "Lava",
       isStatic: this.isStatic,
-      friction: 0.3,
-      frictionStatic: 0.3,
-      restitution: 20,
       angle: this.angle,
     });
+    body.restitution = 10;
+    body.friction = 0;
+    return body;
   }
 }
 

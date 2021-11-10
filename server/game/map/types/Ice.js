@@ -15,14 +15,15 @@ class Ice {
   }
 
   get entity() {
-    return Matter.Bodies.rectangle(this.x, this.y, this.w, this.h, {
+    let body = Matter.Bodies.rectangle(this.x, this.y, this.w, this.h, {
       label: "Ice",
       isStatic: this.isStatic,
-      friction: 0,
-      frictionStatic: 0,
-      restitution: 0.1,
       angle: this.angle,
     });
+    body.restitution = 0;
+    body.friction = 0;
+
+    return body;
   }
 }
 

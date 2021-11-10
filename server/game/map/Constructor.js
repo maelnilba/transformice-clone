@@ -10,13 +10,6 @@ class Constructor {
 
   initMap(mices, engine, playerlist) {
     let entities = {
-      mices: [...Array(Object.values(mices).length)].map((v, i) => {
-        return new MapEnums(200, {
-          startX: this.world.parameters.mice_start.x,
-          startY: this.world.parameters.mice_start.x,
-          playerId: Object.values(playerlist)[i].id,
-        }).entity;
-      }),
       grounds: [...Object.values(this.world.grounds)].map((ground, i) => {
         return new MapEnums(ground.type, {
           isStatic: !ground.dynamic,
@@ -38,6 +31,13 @@ class Constructor {
           id = 41;
         }
         return new MapEnums(id, { x: objet.x, y: objet.y }).entity;
+      }),
+      mices: [...Array(Object.values(mices).length)].map((v, i) => {
+        return new MapEnums(200, {
+          startX: this.world.parameters.mice_start.x,
+          startY: this.world.parameters.mice_start.x,
+          playerId: Object.values(playerlist)[i].id,
+        }).entity;
       }),
     };
 

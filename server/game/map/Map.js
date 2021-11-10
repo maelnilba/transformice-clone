@@ -3,6 +3,12 @@ const Constructor = require("./Constructor");
 const frameRate = 1000 / 30;
 const Groundlabel = ["Wood", "Lava", "Ice", "Trampoline"];
 
+const distance = (x1, y1, x2, y2) => {
+  var x = Math.abs(x1 - x2);
+  var y = Math.abs(y1 - y2);
+  return Math.sqrt(x * x + y * y);
+};
+
 class Map {
   constructor(roomId, players, parent, mapjson) {
     this.parent = parent;
@@ -47,45 +53,41 @@ class Map {
 
     Matter.Events.on(this.engine, "collisionStart", (p) => {
       p.pairs.forEach((pair) => {
-        if (this.mices[pair.bodyA.label]) {
-          if (Groundlabel.includes(pair.bodyB.label)) {
-            this.mices[pair.bodyA.label].isJumped = false;
+        if (this.mices[pair.bodyB.label]) {
+          if (Groundlabel.includes(pair.bodyA.label)) {
+            if (pair.bodyA.friction > 0.1) {
+              this.mices[pair.bodyB.label].isJumped = false;
+            }
           }
-          if (pair.bodyB.label === "Cheese") {
-            this.mices[pair.bodyA.label].hasCheese = true;
-            pair.bodyA.frictionAir = 0.03;
+          if (pair.bodyA.label === "Cheese") {
+            this.mices[pair.bodyB.label].hasCheese = true;
+            pair.bodyB.frictionAir = 0.03;
           }
           if (
-            pair.bodyB.label === "Hole" &&
-            this.mices[pair.bodyA.label].hasCheese
+            pair.bodyA.label === "Hole" &&
+            this.mices[pair.bodyB.label].hasCheese
           ) {
-            this.mices[pair.bodyA.label].hasWin = true;
-            this.records[pair.bodyA.label] = {
-              username: this.mices[pair.bodyA.label].username,
+            this.mices[pair.bodyB.label].hasWin = true;
+            this.records[pair.bodyB.label] = {
+              username: this.mices[pair.bodyB.label].username,
               hasWinAt: new Date() - this.timeStart,
             };
-            Matter.Sleeping.set(pair.bodyA, true);
+            Matter.Sleeping.set(pair.bodyB, true);
           }
         }
       });
     });
   }
 
-  distance(x1, y1, x2, y2) {
-    var x = Math.abs(x1 - x2);
-    var y = Math.abs(y1 - y2);
-    return Math.sqrt(x * x + y * y);
-  }
-
   get emit() {
     let grounds = this.entities.grounds.map((ground, idx) => {
-      const width = this.distance(
+      const width = distance(
         ground.vertices[0].x,
         ground.vertices[0].y,
         ground.vertices[1].x,
         ground.vertices[1].y
       );
-      const height = this.distance(
+      const height = distance(
         ground.vertices[0].x,
         ground.vertices[0].y,
         ground.vertices[3].x,
@@ -187,6 +189,7 @@ class Map {
         } else if (action == "up" && !this.mices[playerId].isJumped) {
           this.mices[playerId].tick = 0;
           this.mices[playerId].isJumped = true;
+          // Matter.Body.translate(mbody, Matter.Vector.create(0, -40));
           Matter.Body.setVelocity(
             mbody,
             Matter.Vector.create(mbody.velocity.x, -10)
