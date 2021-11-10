@@ -44,10 +44,10 @@ export class GameInstance {
         style={{
           width: "800px",
           height: "200px",
-          backgroundColor: "red",
           display: "flex",
           flex: 1,
           flexDirection: "row",
+          backgroundImage: "url(" + "https://i.imgur.com/9i5pYIp.jpeg" + ")",
         }}
       >
         <div
@@ -58,7 +58,19 @@ export class GameInstance {
             display: "flex",
           }}
         >
-          <div style={{ flex: 4 }}>{this.renderChat()}</div>
+          <div
+            style={{
+              flex: 4,
+              display: "flex",
+              flexDirection: "column-reverse",
+              overflowY: "auto",
+              maxWidth: "500px",
+              height: "200px",
+              padding: "5px",
+            }}
+          >
+            {this.renderChat()}
+          </div>
           <div style={{ flex: 1 }}>
             <input
               style={{ width: "90%", margin: "10px" }}
@@ -75,7 +87,28 @@ export class GameInstance {
             />
           </div>
         </div>
-        <div style={{ flex: 1, display: "flex" }}>{this.renderList()}</div>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            height: "200px",
+            overflowY: "auto",
+            color: "white",
+          }}
+        >
+          {this.renderList()}
+        </div>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            height: "200px",
+            overflowY: "auto",
+            color: "white",
+          }}
+        >
+          {this.renderRecord()}
+        </div>
       </div>
     );
   }
@@ -101,21 +134,40 @@ export class GameInstance {
     return <></>;
   }
 
+  renderRecord() {
+    if (this.room && this.room.players && this.isLogged) {
+      return (
+        <ul>
+          {this.room.map.records.map((player, i) => {
+            return (
+              <li key={i + player.username}>
+                {player.username} : {new Date(player.hasWinAt).getSeconds()}.
+                {new Date(player.hasWinAt).getMilliseconds()}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    }
+
+    return <></>;
+  }
+
   renderChat() {
     if (this.isLogged) {
       if (!this.chat.length) {
         return <></>;
       }
       return (
-        <div>
+        <>
           {this.chat.a.map(({ sender, message }) => {
             return (
-              <p>
+              <p style={{ color: "white", margin: "0px" }}>
                 {sender} : {message}
               </p>
             );
           })}
-        </div>
+        </>
       );
     }
   }

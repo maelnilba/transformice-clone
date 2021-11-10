@@ -6,9 +6,9 @@ export class LimitedArray {
 
   push(v) {
     if (this.arr.length == this.size) {
-      this.arr.shift();
+      this.arr.pop();
     }
-    this.arr.push(v);
+    this.arr.unshift(v);
   }
 
   get a() {

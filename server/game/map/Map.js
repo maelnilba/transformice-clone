@@ -7,15 +7,19 @@ class Map {
   constructor(roomId, players, parent) {
     this.parent = parent;
     this.roomId = roomId;
+    this.timeStart = new Date();
     this.timeEnd = new Date().setTime(new Date().getTime() + 2 * 60 * 1000);
+    this.playerlist = players;
+
+    this.records = {};
     this.startX = 200;
     this.startY = 200;
-    this.playerlist = players;
     this.mices = this.initMices(players);
     this.engine = Matter.Engine.create();
     this.entities = this.initEntities(this.mices);
     this.runtime = setInterval(() => {
       Matter.Engine.update(this.engine, frameRate);
+      let MapIsOver = true;
       this.entities.mices.map((m, i) => {
         this.mices[m.label].pos = m.position;
         this.mices[m.label].tick = this.mices[m.label].tick + 1;
@@ -28,8 +32,14 @@ class Map {
           this.mices[m.label].isAlive = false;
           Matter.Sleeping.set(m, true);
         }
+        if (!this.mices[m.label].hasWin && this.mices[m.label].isAlive) {
+          MapIsOver = false;
+        }
       });
       this.parent.emit();
+      if (MapIsOver) {
+        this.parent.mapOver();
+      }
     }, frameRate);
 
     Matter.Events.on(this.engine, "collisionStart", (p) => {
@@ -47,6 +57,10 @@ class Map {
             this.mices[pair.bodyA.label].hasCheese
           ) {
             this.mices[pair.bodyA.label].hasWin = true;
+            this.records[pair.bodyA.label] = {
+              username: this.mices[pair.bodyA.label].username,
+              hasWinAt: new Date() - this.timeStart,
+            };
             Matter.Sleeping.set(pair.bodyA, true);
           }
         }
@@ -75,8 +89,11 @@ class Map {
     });
 
     return {
-      roomId: this.roomId,
-      timeEnd: this.timeEnd,
+      mapinfos: {
+        roomId: this.roomId,
+        timeEnd: this.timeEnd,
+      },
+      records: [...Object.values(this.records)],
       entities: {
         mices: [...Object.values(this.mices)],
         grounds,
@@ -95,6 +112,7 @@ class Map {
         isAlive: true,
         hasCheese: false,
         hasWin: false,
+        hasWinAt: 0,
         isRunningLeft: false,
         isRunningRight: false,
         direction: "right",

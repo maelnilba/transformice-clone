@@ -16,7 +16,7 @@ export class Room {
   deserialize(input) {
     this.id = input.roomId;
     this.players = input.players;
-    this.map = new Map(input.roomId, input.map.entities);
+    this.map = new Map(input.roomId, input.map);
   }
 
   action(gi) {
@@ -24,15 +24,32 @@ export class Room {
   }
 
   awake() {
+    const styleText = new TextStyle({
+      align: "center",
+      fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
+      fontSize: 12,
+      fontWeight: 400,
+      fill: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 2.5,
+      letterSpacing: 2,
+      dropShadow: false,
+      wordWrap: true,
+      wordWrapWidth: 150,
+    });
+
+    const getTimeEnd = (t) => {
+      let time = new Date(new Date(t) - new Date());
+      return `${time.getMinutes()}:${
+        time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds()
+      }`;
+    };
     if (!this.map) {
       return <></>;
     }
 
     return (
       <>
-        <Container position={[0, 0]}>
-          <Text text={this.id} anchor={0.5} x={100} y={20} />
-        </Container>
         {this.map.grounds.map((ground, i) => {
           return (
             <Sprite
@@ -62,6 +79,30 @@ export class Room {
         {this.map.mices.map((mice, i) => {
           return new Mice(i, mice).render();
         })}
+        <Container position={[0, 0]}>
+          <Sprite
+            image="./assets/ui/RoomBar.png"
+            width={476}
+            height={64}
+            anchor={0.5}
+            x={400}
+            y={32}
+          />
+          <Text
+            text={`Salon: ${this.id}`}
+            anchor={0.5}
+            x={275}
+            y={30}
+            style={styleText}
+          />
+          <Text
+            text={`Temps restant: ${getTimeEnd(this.map.timeEnd)}`}
+            anchor={0.5}
+            x={425}
+            y={30}
+            style={styleText}
+          />
+        </Container>
       </>
     );
   }

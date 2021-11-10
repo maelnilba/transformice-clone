@@ -53,6 +53,11 @@ class Room {
     });
   }
 
+  mapOver() {
+    this.stopRotation();
+    this.newMap();
+  }
+
   newMap() {
     if (this.map) {
       this.map.stopRuntime();
