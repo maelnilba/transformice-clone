@@ -25,6 +25,7 @@ class Map {
       this.engine,
       this.playerlist
     );
+
     this.runtime = setInterval(() => {
       if (this.mapConstructor.init) {
         Matter.Engine.update(this.engine, frameRate);
@@ -62,7 +63,6 @@ class Map {
           }
           if (pair.bodyA.label === "Cheese") {
             this.mices[pair.bodyB.label].hasCheese = true;
-            pair.bodyB.frictionAir = 0.03;
           }
           if (
             pair.bodyA.label === "Hole" &&

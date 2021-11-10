@@ -4,7 +4,9 @@ import { useCore } from "./core/useCore";
 
 function App() {
   const [core] = useCore();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(
+    `guest_${Math.floor(Math.random() * (9999 - 1 + 1) + 1)}`
+  );
 
   return (
     <div
@@ -20,7 +22,10 @@ function App() {
       <div>
         {core && !core.GameInstance.isLog && (
           <div>
-            <input onChange={(e) => setUsername(e.target.value)} />
+            <input
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
             <button
               onClick={() => core.GameInstance.GameController.logIn(username)}
             >

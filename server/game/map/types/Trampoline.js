@@ -21,7 +21,7 @@ class Trampoline {
       angle: this.angle,
     });
 
-    body.restitution = 1;
+    body.restitution = 1.2;
     body.friction = 0.3;
     return body;
   }
