@@ -59,6 +59,7 @@ export class Room {
               anchor={0.5}
               height={ground.height}
               width={ground.width}
+              rotation={ground.rotation}
               x={ground.pos.x}
               y={ground.pos.y}
             />

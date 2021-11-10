@@ -1,0 +1,49 @@
+{
+  "code": "@0000000",
+  "author": "nibounet",
+  "world": {
+    "parameters": {
+      "mice_start": { "x": 200, "y": 200 },
+      "shaman_start": { "x": 200, "y": 200 },
+      "cheeses": [{ "x": 400, "y": 100 }],
+      "holes": [
+        { "x": 100, "y": 340 },
+        { "x": 700, "y": 340 }
+      ],
+      "gravity": 1,
+      "collision": false
+    },
+    "grounds": [
+      {
+        "type": 13,
+        "x": 400,
+        "y": 400,
+        "w": 400,
+        "h": 100,
+        "label": "Trampoline",
+        "dynamic": false,
+        "angle": 0
+      },
+      {
+        "type": 10,
+        "x": 100,
+        "y": 400,
+        "w": 200,
+        "h": 80,
+        "label": "Wood",
+        "dynamic": false,
+        "angle": 0
+      },
+      {
+        "type": 10,
+        "x": 700,
+        "y": 400,
+        "w": 200,
+        "h": 80,
+        "label": "Wood",
+        "dynamic": false,
+        "angle": 0
+      }
+    ]
+  }
+}

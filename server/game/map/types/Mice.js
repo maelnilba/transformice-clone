@@ -16,6 +16,7 @@ class Mice {
       label: this.playerId,
       frictionAir: 0.005,
       friction: 0.3,
+      restitution: 0.2,
       inertia: Infinity,
       collisionFilter: {
         group: -1,

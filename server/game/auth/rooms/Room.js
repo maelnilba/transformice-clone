@@ -1,4 +1,16 @@
 const Map = require("../../map/Map");
+const TemplateMap1 = require("../../map/collection/TemplateMap1.json");
+const TemplateMap2 = require("../../map/collection/TemplateMap2.json");
+const TemplateMap3 = require("../../map/collection/TemplateMap3.json");
+const TemplateMap4 = require("../../map/collection/TemplateMap4.json");
+const TemplateMap5 = require("../../map/collection/TemplateMap5.json");
+const MapList = [
+  TemplateMap1,
+  TemplateMap2,
+  TemplateMap3,
+  TemplateMap4,
+  TemplateMap5,
+];
 
 class Room {
   constructor(id, io) {
@@ -7,10 +19,16 @@ class Room {
     this.players = {};
     this.map = null;
     this.rotation = setInterval(() => this.newMap(), 120000);
+    this.maplist = MapList;
   }
 
   get playerCount() {
     return [...Object.values(this.players)].length;
+  }
+
+  getRandomMap() {
+    let rng = Math.floor(Math.random() * this.maplist.length);
+    return this.maplist[rng];
   }
 
   stopRotation() {
@@ -62,7 +80,7 @@ class Room {
     if (this.map) {
       this.map.stopRuntime();
     }
-    this.map = new Map(this.id, this.players, this);
+    this.map = new Map(this.id, this.players, this, this.getRandomMap());
     this.emit();
   }
 }

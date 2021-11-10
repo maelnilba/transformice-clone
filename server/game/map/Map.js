@@ -1,22 +1,25 @@
 const Matter = require("matter-js");
-const MapEnums = require("./types/enums/MapEnums");
+const Constructor = require("./Constructor");
 const frameRate = 1000 / 30;
-const canvas = { width: 800, height: 400 };
+const Groundlabel = ["Wood", "Lava", "Ice", "Trampoline"];
 
 class Map {
-  constructor(roomId, players, parent) {
+  constructor(roomId, players, parent, mapjson) {
     this.parent = parent;
     this.roomId = roomId;
     this.timeStart = new Date();
     this.timeEnd = new Date().setTime(new Date().getTime() + 2 * 60 * 1000);
     this.playerlist = players;
+    this.mapConstructor = new Constructor(mapjson);
 
     this.records = {};
-    this.startX = 200;
-    this.startY = 200;
     this.mices = this.initMices(players);
     this.engine = Matter.Engine.create();
-    this.entities = this.initEntities(this.mices);
+    this.entities = this.mapConstructor.initMap(
+      this.mices,
+      this.engine,
+      this.playerlist
+    );
     this.runtime = setInterval(() => {
       Matter.Engine.update(this.engine, frameRate);
       let MapIsOver = true;
@@ -45,7 +48,7 @@ class Map {
     Matter.Events.on(this.engine, "collisionStart", (p) => {
       p.pairs.forEach((pair) => {
         if (this.mices[pair.bodyA.label]) {
-          if (pair.bodyB.label === "Wood") {
+          if (Groundlabel.includes(pair.bodyB.label)) {
             this.mices[pair.bodyA.label].isJumped = false;
           }
           if (pair.bodyB.label === "Cheese") {
@@ -68,16 +71,32 @@ class Map {
     });
   }
 
+  distance(x1, y1, x2, y2) {
+    var x = Math.abs(x1 - x2);
+    var y = Math.abs(y1 - y2);
+    return Math.sqrt(x * x + y * y);
+  }
+
   get emit() {
     let grounds = this.entities.grounds.map((ground, idx) => {
-      const { min, max } = ground.bounds;
-      const width = max.x - min.x;
-      const height = max.y - min.y;
+      const width = this.distance(
+        ground.vertices[0].x,
+        ground.vertices[0].y,
+        ground.vertices[1].x,
+        ground.vertices[1].y
+      );
+      const height = this.distance(
+        ground.vertices[0].x,
+        ground.vertices[0].y,
+        ground.vertices[3].x,
+        ground.vertices[3].y
+      );
       return {
         pos: ground.position,
         width,
         height,
         label: ground.label,
+        rotation: ground.angle,
       };
     });
 
@@ -127,33 +146,6 @@ class Map {
     clearInterval(this.runtime);
   }
 
-  initEntities(mices) {
-    let entities = {
-      mices: [...Array(Object.values(mices).length)].map((v, i) => {
-        return new MapEnums(200, {
-          startX: this.startX,
-          startY: this.startY,
-          playerId: Object.values(this.playerlist)[i].id,
-        }).entity;
-      }),
-      grounds: [
-        new MapEnums(10, { isStatic: true, x: 400, y: 400, w: 800, h: 100 })
-          .entity,
-        new MapEnums(10, { isStatic: true, x: 600, y: 200, w: 20, h: 480 })
-          .entity,
-      ],
-      mices_object: [
-        new MapEnums(40, { x: 20, y: 300 }).entity,
-        new MapEnums(41, { x: 200, y: 320 }).entity,
-      ],
-    };
-
-    this.engine.gravity.y = 1;
-    Matter.World.add(this.engine.world, [].concat(...Object.values(entities)));
-
-    return entities;
-  }
-
   removePlayer(playerId) {
     delete this.playerlist[playerId];
   }
@@ -169,6 +161,11 @@ class Map {
       if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
           Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
+          // Matter.Body.setVelocity(
+          //   mbody,
+          //   Matter.Vector.create(3, mbody.velocity.y)
+          // );
+          // Matter.Body.applyForce(mbody, mbody.position, { x: 0.001, y: 0 });
           if (!this.mices[playerId].isRunningRight) {
             this.mices[playerId].tick = 0;
           }
@@ -176,6 +173,12 @@ class Map {
           this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
           Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
+          // Matter.Body.setVelocity(
+          //   mbody,
+          //   Matter.Vector.create(-3, mbody.velocity.y)
+          // );
+          // Matter.Body.applyForce(mbody, mbody.position, { x: -0.001, y: 0 });
+
           if (!this.mices[playerId].isRunningLeft) {
             this.mices[playerId].tick = 0;
           }
