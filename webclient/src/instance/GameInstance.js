@@ -5,6 +5,10 @@ export class GameInstance {
   constructor(socket) {
     this.GameController = new GameController(socket, this);
     this.chat = new LimitedArray(100);
+    this.chat.push({
+      senderUsername: "",
+      message: `Bienvenue sur Transformice clone ! /room [salon] pour changer de salon`,
+    });
     this.room = null;
     this.isLogged = false;
     this.message = "";

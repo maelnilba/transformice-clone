@@ -14,7 +14,9 @@ class Map {
     this.parent = parent;
     this.roomId = roomId;
     this.timeStart = new Date();
-    this.timeEnd = new Date().setTime(new Date().getTime() + 2 * 60 * 1000);
+    this.timeEnd = new Date().setTime(
+      new Date().getTime() + 2 * 60 * 1000 + 2000
+    );
     this.playerlist = players;
     this.mapConstructor = new Constructor(mapjson);
     this.records = {};
@@ -26,8 +28,13 @@ class Map {
       this.playerlist
     );
 
+    this.waiting = false;
+    setTimeout(() => {
+      this.waiting = true;
+    }, 2000);
+
     this.runtime = setInterval(() => {
-      if (this.mapConstructor.init) {
+      if (this.mapConstructor.init && this.waiting) {
         Matter.Engine.update(this.engine, frameRate);
         let MapIsOver = true;
         this.entities.mices.map((m, i) => {
@@ -146,6 +153,7 @@ class Map {
   }
 
   stopRuntime() {
+    Matter.Engine.clear(this.engine);
     clearInterval(this.runtime);
   }
 
@@ -163,11 +171,22 @@ class Map {
       });
       if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
-          // Matter.Body.setVelocity(
-          //   mbody,
-          //   Matter.Vector.create(0, mbody.velocity.y)
-          // );
-          Matter.Body.translate(mbody, Matter.Vector.create(4, 0));
+          if (mbody.velocity.x >= 0 && mbody.velocity.x < 4) {
+            Matter.Body.setVelocity(
+              mbody,
+              Matter.Vector.create(4, mbody.velocity.y)
+            );
+          } else if (mbody.velocity.x < 0) {
+            Matter.Body.setVelocity(
+              mbody,
+              Matter.Vector.create(mbody.velocity.x + 1, mbody.velocity.y)
+            );
+          } else {
+            Matter.Body.setVelocity(
+              mbody,
+              Matter.Vector.create(mbody.velocity.x, mbody.velocity.y)
+            );
+          }
 
           if (!this.mices[playerId].isRunningRight) {
             this.mices[playerId].tick = 0;
@@ -175,11 +194,22 @@ class Map {
           this.mices[playerId].isRunningLeft = false;
           this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
-          // Matter.Body.setVelocity(
-          //   mbody,
-          //   Matter.Vector.create(0, mbody.velocity.y)
-          // );
-          Matter.Body.translate(mbody, Matter.Vector.create(-4, 0));
+          if (mbody.velocity.x <= 0 && mbody.velocity.x > -4) {
+            Matter.Body.setVelocity(
+              mbody,
+              Matter.Vector.create(-4, mbody.velocity.y)
+            );
+          } else if (mbody.velocity.x > 0) {
+            Matter.Body.setVelocity(
+              mbody,
+              Matter.Vector.create(mbody.velocity.x - 1, mbody.velocity.y)
+            );
+          } else {
+            Matter.Body.setVelocity(
+              mbody,
+              Matter.Vector.create(mbody.velocity.x, mbody.velocity.y)
+            );
+          }
 
           if (!this.mices[playerId].isRunningLeft) {
             this.mices[playerId].tick = 0;
@@ -189,12 +219,10 @@ class Map {
         } else if (action == "up" && !this.mices[playerId].isJumped) {
           this.mices[playerId].tick = 0;
           this.mices[playerId].isJumped = true;
-          // Matter.Body.translate(mbody, Matter.Vector.create(0, -40));
           Matter.Body.setVelocity(
             mbody,
             Matter.Vector.create(mbody.velocity.x, -10)
           );
-          // Matter.Body.applyForce(mbody, mbody.position, { x: 0, y: -0.1 });
         } else if (action == "stop") {
           if (this.mices[playerId].isRunningRight) {
             this.mices[playerId].direction = "right";

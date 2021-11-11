@@ -66,6 +66,7 @@ class Room {
     this.io.in(this.id).emit("event", {
       id: 300,
       roomId: this.id,
+      waiting: this.map.waiting,
       players: [...Object.values(this.players)],
       map: this.map.emit,
     });

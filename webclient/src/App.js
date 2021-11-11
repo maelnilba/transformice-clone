@@ -21,7 +21,8 @@ function App() {
     >
       <div>
         {core && !core.GameInstance.isLog && (
-          <div>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <img src="./logo.png" alt="logo" width="400px" height="400px" />
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -29,7 +30,7 @@ function App() {
             <button
               onClick={() => core.GameInstance.GameController.logIn(username)}
             >
-              connect
+              Jouer !
             </button>
           </div>
         )}

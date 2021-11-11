@@ -46,7 +46,7 @@ class Constructor {
       }),
     };
 
-    engine.gravity.y = this.world.parameters.gravity;
+    engine.gravity.y = 0.7 * this.world.parameters.gravity;
     Matter.World.add(engine.world, [].concat(...Object.values(entities)));
 
     this.init = true;

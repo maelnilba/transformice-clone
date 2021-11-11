@@ -7,6 +7,7 @@ export class Room {
     this.id = id;
     this.players = {};
     this.map = null;
+    this.waiting = true;
   }
 
   get ProtocolId() {
@@ -14,6 +15,7 @@ export class Room {
   }
 
   deserialize(input) {
+    this.waiting = input.waiting;
     this.id = input.roomId;
     this.players = input.players;
     this.map = new Map(input.roomId, input.map);
