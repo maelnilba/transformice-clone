@@ -162,7 +162,7 @@ class Map {
   }
 
   movePlayer(playerId, action) {
-    if (this.playerlist[playerId]) {
+    if (this.playerlist[playerId] && this.waiting) {
       let mbody = null;
       this.entities.mices.map((m, i) => {
         if (m.label == playerId) {
@@ -172,9 +172,10 @@ class Map {
       if (mbody && !this.mices[playerId].hasWin) {
         if (action == "right") {
           if (mbody.velocity.x >= 0 && mbody.velocity.x < 4) {
+            Matter.Body.translate(mbody, { x: 3, y: 0 });
             Matter.Body.setVelocity(
               mbody,
-              Matter.Vector.create(4, mbody.velocity.y)
+              Matter.Vector.create(1, mbody.velocity.y)
             );
           } else if (mbody.velocity.x < 0) {
             Matter.Body.setVelocity(
@@ -195,9 +196,10 @@ class Map {
           this.mices[playerId].isRunningRight = true;
         } else if (action == "left") {
           if (mbody.velocity.x <= 0 && mbody.velocity.x > -4) {
+            Matter.Body.translate(mbody, { x: -3, y: 0 });
             Matter.Body.setVelocity(
               mbody,
-              Matter.Vector.create(-4, mbody.velocity.y)
+              Matter.Vector.create(-1, mbody.velocity.y)
             );
           } else if (mbody.velocity.x > 0) {
             Matter.Body.setVelocity(

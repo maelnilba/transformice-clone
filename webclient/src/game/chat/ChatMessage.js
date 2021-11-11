@@ -3,6 +3,7 @@ export class ChatMessage {
     this.senderId = "";
     this.senderUsername = "";
     this.message = "";
+    this.time = "";
   }
 
   get ProtocolId() {
@@ -13,6 +14,10 @@ export class ChatMessage {
     this.senderId = input.senderId;
     this.senderUsername = input.senderUsername;
     this.message = input.message;
+    let d = new Date();
+    this.time = `[${d.getHours() < 10 ? 0 : ""}${d.getHours()}:${
+      d.getMinutes() < 10 ? 0 : ""
+    }${d.getMinutes()}]`;
   }
 
   action(gi) {

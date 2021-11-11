@@ -8,6 +8,7 @@ export class GameInstance {
     this.chat.push({
       senderUsername: "",
       message: `Bienvenue sur Transformice clone ! /room [salon] pour changer de salon`,
+      time: "",
     });
     this.room = null;
     this.isLogged = false;
@@ -39,6 +40,7 @@ export class GameInstance {
     this.chat.push({
       sender: chatmessage.senderUsername,
       message: chatmessage.message,
+      time: chatmessage.time,
     });
   }
 
@@ -164,10 +166,10 @@ export class GameInstance {
       }
       return (
         <>
-          {this.chat.a.map(({ sender, message }) => {
+          {this.chat.a.map(({ sender, message, time }) => {
             return (
               <p style={{ color: "white", margin: "0px" }}>
-                {sender} : {message}
+                {time} {sender} {sender ? ":" : ""} {message}
               </p>
             );
           })}
